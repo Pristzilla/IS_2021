@@ -18,21 +18,21 @@ public abstract class AlarmasState {
 		return estadoDesprogramado;
 	}
 	
-	public abstract void apagar(Alarmas context);
+	public void apagar(Alarmas context) {}
 	
-	public abstract void alarmaOff(String id, Alarmas context);
+	public void alarmaOff(String id, Alarmas context) {}
 	
-	public abstract void alarmaOn(String id, Alarmas context);
+	public void alarmaOn(String id, Alarmas context) {}
 	
-	public abstract void borraAlarma(String id, Alarmas context);
+	public void borraAlarma(String id, Alarmas context) {}
 	
-	public abstract void nuevaAlarma(String id, Date hora, Alarmas context);
+	public void nuevaAlarma(String id, Date hora, Alarmas context) {}
 	
-	public abstract void entryAction(Alarmas context);
+	public void entryAction(Alarmas context) {}
 	
-	public abstract void doAction(Alarmas context);
+	public void doAction(Alarmas context) {}
 	
-	public abstract void exitAction(Alarmas context);
+	public void exitAction(Alarmas context) {}
 	
 	public static Desprogramado getEstadoDesprogramado() {
 		return estadoDesprogramado;

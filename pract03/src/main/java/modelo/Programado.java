@@ -10,10 +10,10 @@ public class Programado extends AlarmasState {
 	protected AlarmasTask alarmasTask;
 
 	@Override
-	public void apagar(Alarmas context) {}
-
-	@Override
 	public void alarmaOff(String id, Alarmas context) {
+		
+		alarmasTask.cancel();
+		
 		this.exitAction(context);
 		context.setState(estadoProgramado);
 		// Acciones asociadas a la transicion
@@ -24,6 +24,9 @@ public class Programado extends AlarmasState {
 
 	@Override
 	public void alarmaOn(String id, Alarmas context) {
+		
+		alarmasTask.cancel();
+		
 		this.exitAction(context);
 		context.setState(estadoProgramado);
 		// Acciones asociadas a la transicion
@@ -34,6 +37,9 @@ public class Programado extends AlarmasState {
 
 	@Override
 	public void borraAlarma(String id, Alarmas context) {
+		
+		alarmasTask.cancel();
+		
 		this.exitAction(context);
 		context.setState(estadoProgramado);
 		// Acciones asociadas a la transicion
@@ -44,6 +50,9 @@ public class Programado extends AlarmasState {
 
 	@Override
 	public void nuevaAlarma(String id, Date hora, Alarmas context) {
+		
+		alarmasTask.cancel();
+		
 		this.exitAction(context);
 		context.setState(estadoProgramado);
 		// Acciones asociadas a la transicion
@@ -63,12 +72,6 @@ public class Programado extends AlarmasState {
 			estadoDesprogramado.doAction(context);
 		}
 	}
-
-	@Override
-	public void doAction(Alarmas context) {}
-
-	@Override
-	public void exitAction(Alarmas context) {}
 	
 	public class AlarmasTask extends TimerTask {
 		

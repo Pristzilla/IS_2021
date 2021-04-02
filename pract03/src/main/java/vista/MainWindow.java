@@ -1,65 +1,37 @@
 package vista;
 
-import java.awt.EventQueue;
-
-import java.awt.event.ActionListener;
-import java.awt.*;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
+import javax.swing.SpinnerDateModel;
 
-import controlador.AlarmasControlador;
 import modelo.Alarma;
-import modelo.Alarmas;
 
 import javax.swing.JButton;
 import javax.swing.JTextArea;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+
+import java.awt.event.ActionListener;
+import java.util.Calendar;
+import java.util.Date;
+
 import javax.swing.JSpinner;
 
 
-//importaciones
-import java.awt.event.ActionListener;
-
 public class MainWindow {
-	
-	
 
-	JFrame frame;
+	// Atributos
+	private JFrame frame;
 	private JTextField txtNombreAlarma;
-	
-	//declaración elementos
+	private JLabel lblAlarmasActivas;
+	private JLabel lblAlarmasDesact;
+	private JSpinner spinnerHora;
 	private JButton btnAnhadir;
 	private JButton btnOn;
 	private JButton btnOff;
 	private JButton btnEliminar;
-
-	
-	/**
-	 * Launch the application.
-	 */
-	/*
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					
-					MainWindow vista = new MainWindow();
-					Alarmas modelo = new Alarmas();
-					AlarmasControlador controlador = new AlarmasControlador(modelo, vista);
-					vista.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	
-	*/
 
 	/**
 	 * Create the application.
@@ -100,7 +72,10 @@ public class MainWindow {
 		lblHoraAlarma.setBounds(45, 129, 46, 14);
 		panel.add(lblHoraAlarma);
 		
-		JSpinner spinnerHora = new JSpinner();
+		Date today = new Date();
+		spinnerHora = new JSpinner(new SpinnerDateModel(today,null,null,Calendar.MINUTE));
+		JSpinner.DateEditor editor = new JSpinner.DateEditor (spinnerHora, "hh:mm ");
+		spinnerHora.setEditor(editor);
 		spinnerHora.setBounds(97, 126, 107, 20);
 		panel.add(spinnerHora);
 		
@@ -108,17 +83,13 @@ public class MainWindow {
 		btnAnhadir.setBounds(98, 216, 89, 23);
 		panel.add(btnAnhadir);
 		
-		
-		
-		
-		
 		// Seccion derecha - modificar alarma existente
 		JLabel lblModificarAlarma = new JLabel("Modificar alarma");
 		lblModificarAlarma.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblModificarAlarma.setBounds(379, 32, 110, 14);
 		panel.add(lblModificarAlarma);
 		
-		JLabel lblAlarmasActivas = new JLabel("Alarmas activas");
+		lblAlarmasActivas = new JLabel("Alarmas activas");
 		lblAlarmasActivas.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblAlarmasActivas.setBounds(312, 81, 103, 14);
 		panel.add(lblAlarmasActivas);
@@ -131,7 +102,7 @@ public class MainWindow {
 		btnOn.setBounds(503, 216, 60, 23);
 		panel.add(btnOn);
 		
-		JLabel lblAlarmasDesact = new JLabel("Alarmas desactivadas");
+		lblAlarmasDesact = new JLabel("Alarmas desactivadas");
 		lblAlarmasDesact.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblAlarmasDesact.setBounds(465, 81, 133, 14);
 		panel.add(lblAlarmasDesact);
@@ -148,36 +119,58 @@ public class MainWindow {
 		btnEliminar.setBounds(401, 260, 89, 23);
 		panel.add(btnEliminar);
 		
-		
-		
-		
 	}
-		
 	
-	
+	/**
+	 * Gestionador del boton "anhadir alarma"
+	 * @param listenForNewAlarm
+	 */
 	public void addAnhadeAlarmaListener (ActionListener listenForNewAlarm) {
 		btnAnhadir.addActionListener(listenForNewAlarm);
 	}
 	
+	/**
+	 * @return el nombre de la alarma
+	 */
 	public String getNombreAlarma() {
 		return txtNombreAlarma.getText();
 	}
 	
-	public void MuestraInformaciónAlarma (Alarma alarma) {
-		System.out.println ("Nombre: "+alarma.getId()+"; Hora programada: "+alarma.getHora());
+	/**
+	 * @return el nombre de la alarma activa seleccionada
+	 * TODO: como se cual esta seleccionada??
+	 */
+	public String getAlarmaActivaSelected() {
+		return lblAlarmasActivas.getText(); 
 	}
-
+	
+	/**
+	 * @return el nombre de la alarma desactivada seleccionada
+	 * TODO: como se cual esta seleccionada??
+	 */
+	public String getAlarmaDesactivadaSelected() {
+		return lblAlarmasDesact.getText(); 
+	}
+	
+	/**
+	 * Muestra la informacion de la nueva alarma anhadida
+	 * @param alarma alarma anhadida
+	 */
+	public void MuestraInformacionAlarma (Alarma alarma) {
+		System.out.println ("Nombre: "+ alarma.getId()+"; Hora programada: "+ alarma.getHora());
+	}
+	
+	/**
+	 * @return devuelve el spinner de la hora
+	 */
+	public JSpinner getSpinner() {
+		return spinnerHora;
+	}
+	
+	/**
+	 * Pone la vista a visible
+	 */
 	public void setVisible() {
 		frame.setVisible(true);
-		
 	}
-
-	
-	
-	
-	
-	
 }
-	
-	
-

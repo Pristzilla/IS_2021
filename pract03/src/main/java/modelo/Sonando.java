@@ -11,6 +11,9 @@ public class Sonando extends AlarmasState {
 
 	@Override
 	public void apagar(Alarmas context) {
+		
+		alarmasTask.cancel();
+		
 		this.exitAction(context);
 		context.setState(estadoProgramado);
 		// Acciones asociadas a la transicion
@@ -18,19 +21,7 @@ public class Sonando extends AlarmasState {
 		estadoProgramado.entryAction(context);
 		estadoProgramado.doAction(context);
 	}
-
-	@Override
-	public void alarmaOff(String id, Alarmas context) {}
-
-	@Override
-	public void alarmaOn(String id, Alarmas context) {}
-
-	@Override
-	public void borraAlarma(String id, Alarmas context) {}
-
-	@Override
-	public void nuevaAlarma(String id, Date hora, Alarmas context) {}
-
+	
 	@Override
 	public void entryAction(Alarmas context) {
 		// Programa el timer
@@ -38,13 +29,10 @@ public class Sonando extends AlarmasState {
 		timer.schedule(alarmasTask, context.getIntervaloSonando()); //ms
 		context.activarMelodia();		
 	}
-
-	@Override
-	public void doAction(Alarmas context) {}
-
+	
 	@Override
 	public void exitAction(Alarmas context) {
-		context.desactivarMelodia();	
+		context.desactivarMelodia();
 	}
 	
 	public class AlarmasTask extends TimerTask {
