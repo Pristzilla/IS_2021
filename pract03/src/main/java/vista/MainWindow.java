@@ -7,6 +7,7 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
+import javax.swing.SpinnerModel;
 
 import modelo.Alarma;
 
@@ -14,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JTextArea;
 
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -72,10 +74,30 @@ public class MainWindow {
 		lblHoraAlarma.setBounds(45, 129, 46, 14);
 		panel.add(lblHoraAlarma);
 		
-		Date today = new Date();
-		spinnerHora = new JSpinner(new SpinnerDateModel(today,null,null,Calendar.MINUTE));
-		JSpinner.DateEditor editor = new JSpinner.DateEditor (spinnerHora, "hh:mm ");
+		
+		
+		
+		//LO NUEVO
+		Calendar calendar = Calendar.getInstance();
+		Date initDate = calendar.getTime();
+		calendar.add(Calendar.MINUTE, -1);
+		Date earliestDate = calendar.getTime();
+		calendar.add(Calendar.YEAR, 200);
+		Date latestDate = calendar.getTime();
+		SpinnerModel dateModel = new SpinnerDateModel(initDate,
+		                             earliestDate,
+		                             latestDate,
+		                             Calendar.YEAR);
+		
+		
+		spinnerHora = new JSpinner (dateModel);
+		
+		/* ESTO ES LO QUE HABÍA ANTES
+		Calendar cal = Calendar.getInstance();
+		spinnerHora = new JSpinner(new SpinnerDateModel(cal.getTime(),null,null,Calendar.MINUTE));
+		JSpinner.DateEditor editor = new JSpinner.DateEditor (spinnerHora, "hh:mm a ");
 		spinnerHora.setEditor(editor);
+		*/
 		spinnerHora.setBounds(97, 126, 107, 20);
 		panel.add(spinnerHora);
 		
@@ -164,7 +186,7 @@ public class MainWindow {
 	 * @return devuelve el spinner de la hora
 	 */
 	public JSpinner getSpinner() {
-		return spinnerHora;
+		return  spinnerHora;
 	}
 	
 	/**

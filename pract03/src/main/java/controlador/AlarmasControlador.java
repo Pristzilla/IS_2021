@@ -36,17 +36,10 @@ public class AlarmasControlador {
 		public void actionPerformed(ActionEvent arg0) {
 			
 			String nombreAlarma = vista1.getNombreAlarma();
+			Date fechaAlarma = (Date) vista1.getSpinner().getValue();
 			
-			SimpleDateFormat sdf = new SimpleDateFormat ("yyyy-MM-dd");
-			Date fechaAlarma = null;
-			try {
-				fechaAlarma = sdf.parse("2020-04-3");
-			} catch (ParseException e) {
-				System.out.println("Error en formato de fecha.");
-				e.printStackTrace();
-			}
 			
-			Alarma alarma = new Alarma(nombreAlarma, (Date) vista1.getSpinner().getValue());
+			Alarma alarma = new Alarma(nombreAlarma, fechaAlarma);
 			vista1.MuestraInformacionAlarma(alarma);
 			modelo.anhadeAlarma(alarma);
 			modelo.nuevaAlarma(nombreAlarma, fechaAlarma); // TODO esta bien?
