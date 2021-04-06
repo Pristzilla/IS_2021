@@ -61,7 +61,7 @@ public class PopUpApagarAlarma extends JFrame {
 	 * Gestionador del boton "apagar alarma"
 	 * @param listenForNewAlarm
 	 */
-	public void apagaAlarmaListener (ActionListener listenForNewAlarm) {
+	public void addApagaAlarmaListener (ActionListener listenForNewAlarm) {
 		btnApagar.addActionListener(listenForNewAlarm);
 	}
 }

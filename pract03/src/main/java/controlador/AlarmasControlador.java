@@ -25,6 +25,21 @@ public class AlarmasControlador {
 		/*Indica que cuando se pulse el boton de anhadir alarma,
 		 * se ejecutara la operacion desde la clase interna NuevaAlarmaListener.*/
 		vista1.addAnhadeAlarmaListener(new NuevaAlarmaListener());	
+		
+		/*Cuando se pulse el botón de elimina Alarma, se
+		 * ejecutará la operación desde la clase interna EliminaAlarmaListener*/
+		vista1.addEliminaAlarmaListener(new EliminaAlarmaListener());
+		
+		/*Cuandos se pulse el botón de activa Alarma, se 
+		 * ejecutará al operación desde la clase interna AlarmaOnListener*/
+		vista1.addAlarmaONListener(new AlarmaOnListener());
+		
+		/*Cuandos se pulse el botón de activa Alarma, se 
+		 * ejecutará al operación desde la clase interna AlarmaOnListener*/
+		vista1.addAlarmaOFFListener(new AlarmaOffListener());
+		
+		vista2.addApagaAlarmaListener(new ApagaAlarmaListener());
+		
 	}
 	
 	/**

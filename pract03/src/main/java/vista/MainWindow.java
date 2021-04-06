@@ -78,6 +78,7 @@ public class MainWindow {
 		
 		
 		//LO NUEVO
+		/*
 		Calendar calendar = Calendar.getInstance();
 		Date initDate = calendar.getTime();
 		calendar.add(Calendar.MINUTE, -1);
@@ -91,13 +92,14 @@ public class MainWindow {
 		
 		
 		spinnerHora = new JSpinner (dateModel);
+		*/
 		
-		/* ESTO ES LO QUE HABÍA ANTES
+		// ESTO ES LO QUE HABÍA ANTES
 		Calendar cal = Calendar.getInstance();
 		spinnerHora = new JSpinner(new SpinnerDateModel(cal.getTime(),null,null,Calendar.MINUTE));
 		JSpinner.DateEditor editor = new JSpinner.DateEditor (spinnerHora, "hh:mm a ");
 		spinnerHora.setEditor(editor);
-		*/
+		//*/
 		spinnerHora.setBounds(97, 126, 107, 20);
 		panel.add(spinnerHora);
 		
@@ -150,6 +152,30 @@ public class MainWindow {
 	public void addAnhadeAlarmaListener (ActionListener listenForNewAlarm) {
 		btnAnhadir.addActionListener(listenForNewAlarm);
 	}
+	
+	/**
+	 * Gestionador del boton "elimina alarma"
+	 * @param listenforDeletedAlarm
+	 */
+	public void addEliminaAlarmaListener (ActionListener listenforDeletedAlarm) {
+		btnEliminar.addActionListener(listenforDeletedAlarm);
+	}
+	
+	/**
+	 * Gestionador del boton "activa alarma"
+	 */
+	public void addAlarmaONListener (ActionListener listenforAlarmON) {
+		btnEliminar.addActionListener(listenforAlarmON);
+	}
+	
+	/**
+	 * Gestionador del boton "desactiva alarma
+	 * @param listenforDeletedAlarm
+	 */
+	public void addAlarmaOFFListener (ActionListener listenforAlarmOFF) {
+		btnEliminar.addActionListener(listenforAlarmOFF);
+	}
+	
 	
 	/**
 	 * @return el nombre de la alarma
