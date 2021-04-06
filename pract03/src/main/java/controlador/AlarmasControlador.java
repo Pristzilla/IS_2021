@@ -26,20 +26,19 @@ public class AlarmasControlador {
 		 * se ejecutara la operacion desde la clase interna NuevaAlarmaListener.*/
 		vista1.addAnhadeAlarmaListener(new NuevaAlarmaListener());	
 		
-		/*Cuando se pulse el botón de elimina Alarma, se
-		 * ejecutará la operación desde la clase interna EliminaAlarmaListener*/
+		/*Cuando se pulse el boton de elimina Alarma, se
+		 * ejecutara� la operacion desde la clase interna EliminaAlarmaListener*/
 		vista1.addEliminaAlarmaListener(new EliminaAlarmaListener());
 		
-		/*Cuandos se pulse el botón de activa Alarma, se 
-		 * ejecutará al operación desde la clase interna AlarmaOnListener*/
-		vista1.addAlarmaONListener(new AlarmaOnListener());
+		/*Cuandos se pulse el boton de activa Alarma, se 
+		 * ejecutara al operacion desde la clase interna AlarmaOnListener*/
+		vista1.addAlarmaOnListener(new AlarmaOnListener());
 		
-		/*Cuandos se pulse el botón de activa Alarma, se 
-		 * ejecutará al operación desde la clase interna AlarmaOnListener*/
-		vista1.addAlarmaOFFListener(new AlarmaOffListener());
+		/*Cuandos se pulse el boton de activa Alarma, se 
+		 * ejecutara al operacion desde la clase interna AlarmaOnListener*/
+		vista1.addAlarmaOffListener(new AlarmaOffListener());
 		
 		vista2.addApagaAlarmaListener(new ApagaAlarmaListener());
-		
 	}
 	
 	/**
@@ -51,13 +50,20 @@ public class AlarmasControlador {
 		public void actionPerformed(ActionEvent arg0) {
 			
 			String nombreAlarma = vista1.getNombreAlarma();
-			Date fechaAlarma = (Date) vista1.getSpinner().getValue();
 			
+			SimpleDateFormat sdf = new SimpleDateFormat ("yyyy-MM-dd");
+			Date fechaAlarma = null;
+			try {
+				fechaAlarma = sdf.parse("2020-04-3");
+			} catch (ParseException e) {
+				System.out.println("Error en formato de fecha.");
+				e.printStackTrace();
+			}
 			
-			Alarma alarma = new Alarma(nombreAlarma, fechaAlarma);
-			vista1.MuestraInformacionAlarma(alarma);
+			Alarma alarma = new Alarma(nombreAlarma, (Date) vista1.getSpinner().getValue());
+			vista1.MuestraInformacionAlarmaActiva(alarma);
 			modelo.anhadeAlarma(alarma);
-			modelo.nuevaAlarma(nombreAlarma, fechaAlarma); // TODO esta bien?
+			modelo.nuevaAlarma(nombreAlarma, fechaAlarma);
 		}
 	}
 	

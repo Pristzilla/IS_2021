@@ -7,7 +7,7 @@ import java.util.PriorityQueue;
 public class Alarmas {
 	
 	private AlarmasState state;
-	private final static int INTERVALO_SONANDO = 10000; // milisegundos
+	private final static int INTERVALO_SONANDO = 5000; // milisegundos
 	private PriorityQueue<Alarma> alarmasActivas = new PriorityQueue<Alarma>();
 	private ArrayList<Alarma> alarmasDesactivadas = new ArrayList<Alarma>();
 	
