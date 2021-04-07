@@ -15,11 +15,13 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerModel;
 
 import modelo.Alarma;
 import javax.swing.JList;
+import java.awt.event.ActionEvent;
 
 public class MainWindow {
 
@@ -33,9 +35,14 @@ public class MainWindow {
 		private JButton btnOn;
 		private JButton btnOff;
 		private JButton btnEliminar;
+		private JButton btnApagarAlarma;
 		private DefaultListModel<String> modelActivas = new DefaultListModel<String>();
 		private DefaultListModel<String> modelDesactivadas = new DefaultListModel<String>();
 
+		//listas de alarmas activas y desactivadas de las que podemos seleccionar
+		JList<String> listAlarmasActivas = new JList<String>(modelActivas);
+		JList<String> listAlarmasDesactivadas = new JList<String>(modelDesactivadas);
+		
 		/**
 		 * Create the application.
 		 */
@@ -67,7 +74,7 @@ public class MainWindow {
 			panel.add(lblNombreAlarma);
 			
 			txtNombreAlarma = new JTextField();
-			txtNombreAlarma.setBounds(97, 81, 107, 20);
+			txtNombreAlarma.setBounds(97, 81, 123, 20);
 			panel.add(txtNombreAlarma);
 			txtNombreAlarma.setColumns(10);
 			
@@ -75,25 +82,18 @@ public class MainWindow {
 			lblHoraAlarma.setBounds(45, 129, 46, 14);
 			panel.add(lblHoraAlarma);
 			
-			/**
-			Date today = new Date();
-			spinnerHora = new JSpinner(new SpinnerDateModel(today,null,null,Calendar.MINUTE));
-			JSpinner.DateEditor editor = new JSpinner.DateEditor (spinnerHora, "hh:mm ");
+			
+	
+			
+			//Gestión del spinner
+			spinnerHora = new JSpinner(new SpinnerDateModel(new Date(),null,null,Calendar.MINUTE));
+			JSpinner.DateEditor editor = new JSpinner.DateEditor (spinnerHora, "hh:mm a");
 			spinnerHora.setEditor(editor);
-			*/		
-			Calendar calendar = Calendar.getInstance();
-			Date initDate = calendar.getTime();
-			calendar.add(Calendar.MINUTE, -1);
-			Date earliestDate = calendar.getTime();
-			calendar.add(Calendar.YEAR, 200);
-			Date latestDate = calendar.getTime();
-			SpinnerModel dateModel = new SpinnerDateModel(initDate, earliestDate, latestDate, Calendar.YEAR);
-			spinnerHora = new JSpinner (dateModel);
-			spinnerHora.setBounds(97, 126, 107, 20);
+			spinnerHora.setBounds(97, 126, 123, 20);
 			panel.add(spinnerHora);
 			
 			btnAnhadir = new JButton("A\u00F1adir");
-			btnAnhadir.setBounds(98, 216, 89, 23);
+			btnAnhadir.setBounds(113, 175, 89, 23);
 			panel.add(btnAnhadir);
 			
 			// Seccion derecha - modificar alarma existente
@@ -107,7 +107,8 @@ public class MainWindow {
 			lblAlarmasActivas.setBounds(312, 81, 103, 14);
 			panel.add(lblAlarmasActivas);
 			
-			JList<String> listAlarmasActivas = new JList<String>(modelActivas);
+			
+			listAlarmasActivas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			listAlarmasActivas.setBounds(295, 106, 133, 99);
 			panel.add(listAlarmasActivas);
 			
@@ -120,7 +121,10 @@ public class MainWindow {
 			lblAlarmasDesact.setBounds(465, 81, 133, 14);
 			panel.add(lblAlarmasDesact);
 			
-			JList<String> listAlarmasDesactivadas = new JList<String>(modelDesactivadas);
+			
+			
+			
+			listAlarmasDesactivadas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			listAlarmasDesactivadas.setBounds(462, 106, 133, 99);
 			panel.add(listAlarmasDesactivadas);
 			
@@ -131,6 +135,11 @@ public class MainWindow {
 			btnEliminar = new JButton("Eliminar");
 			btnEliminar.setBounds(401, 260, 89, 23);
 			panel.add(btnEliminar);			
+			
+			btnApagarAlarma = new JButton("APAGAR!");
+			btnApagarAlarma.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+			btnApagarAlarma.setBounds(74, 239, 174, 64);
+			panel.add(btnApagarAlarma);
 		}
 		
 		/**
@@ -139,6 +148,14 @@ public class MainWindow {
 		 */
 		public void addAnhadeAlarmaListener (ActionListener listenForNewAlarm) {
 			btnAnhadir.addActionListener(listenForNewAlarm);
+		}
+		
+		/**
+		 * Gestionador del boton "apagar alarma"
+		 * @param listenforStoppedAlarm
+		 */
+		public void addApagarAlarmaListener (ActionListener listenforStoppedAlarm) {
+			btnApagarAlarma.addActionListener(listenforStoppedAlarm);
 		}
 		
 		/**
@@ -165,7 +182,7 @@ public class MainWindow {
 		}
 		
 		/**
-		 * @return el nombre de la alarma
+		 * @return el nombre de la alarma creada
 		 */
 		public String getNombreAlarma() {
 			return txtNombreAlarma.getText();
@@ -176,16 +193,59 @@ public class MainWindow {
 		 * TODO: como se cual esta seleccionada??
 		 */
 		public String getAlarmaActivaSelected() {
-			return lblAlarmasActivas.getText(); 
+			return listAlarmasActivas.getSelectedValue(); 
 		}
 		
 		/**
+		 * permite anhadir el nombre de una alarma a activa
+		 * @param nombreAlarma
+		 */
+		public void anhadeModelActivas(String nombreAlarma) {
+			modelActivas.addElement(nombreAlarma);
+			
+		}
+		/**
+		 * permite anhadir el nombre de una alarma a desactivadas
+		 * @param nombreAlarma
+		 */
+		public void anhadeModelDesactivadas (String nombreAlarma) {
+			modelDesactivadas.addElement(nombreAlarma);
+		}
+		
+		/**
+		 * permite eliminar el nombre de una alarma de activas
+		 * @param nombreAlarma
+		 */
+		public void eliminaModelActivas (String nombreAlarma) {
+			modelActivas.removeElement(nombreAlarma);
+		}
+		
+		/**
+		 * permite eliminar el nombre de una alarma de desactivadas
+		 * @param nombreAlarma
+		 */
+		public void eliminaModelDesactivadas (String nombreAlarma) {
+			modelDesactivadas.removeElement(nombreAlarma);
+		}
+		
+
+		
+		/**
 		 * @return el nombre de la alarma desactivada seleccionada
-		 * TODO: como se cual esta seleccionada??
 		 */
 		public String getAlarmaDesactivadaSelected() {
-			return lblAlarmasDesact.getText(); 
+			return listAlarmasDesactivadas.getSelectedValue();
 		}
+		
+		/**
+		 * A la hora de eliminar una alarma, nos conviene saber donde hemos
+		 * hecho la seleccion porque si comparamos con null, nos sale una excepcion.
+		 */
+		public Boolean SelectionAlarmasActivasEmpty() {
+			return listAlarmasActivas.isSelectionEmpty();
+		}
+		
+		
 		
 		/**
 		 * Muestra la informacion de la nueva alarma anhadida
@@ -193,22 +253,30 @@ public class MainWindow {
 		 */
 		public void MuestraInformacionAlarmaActiva (Alarma alarma) {
 			System.out.println ("Nombre: "+ alarma.getId()+"; Hora programada: "+ alarma.getHora());
-			modelActivas.add(0, getNombreAlarma()); // Hay que gestionar el indice
+			//modelActivas.addElement(alarma.getId());
 		}
 		
 		/**
 		 * Muestra la informacion de la alarma desactivada
 		 * @param alarma alarma anhadida
+		 * ELIMINAR
 		 */
 		public void MuestraInformacionAlarmaDeactivada (Alarma alarma) { 
-			modelDesactivadas.add(0, getNombreAlarma()); // Hay que gestionar el indice
+			//modelDesactivadas.addElement(alarma.getId());
 		}
 		
 		/**
-		 * @return devuelve el spinner de la hora
+		 * @return 
 		 */
-		public JSpinner getSpinner() {
-			return spinnerHora;
+		public Date getFechaHoraAlarma() {
+			Date fecha = new Date();
+			Date aux = (Date) spinnerHora.getValue();
+			fecha.setHours(aux.getHours());
+			fecha.setMinutes(aux.getMinutes());
+			fecha.setSeconds(0);
+			
+			return fecha;
+			
 		}
 		
 		/**

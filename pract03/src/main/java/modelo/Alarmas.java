@@ -31,12 +31,13 @@ public class Alarmas {
 	 * @param a
 	 * @return
 	 */
-	public boolean anhadeAlarma(Alarma a) {
+	public boolean anhadeAlarmaActiva(Alarma a) {
 		if (existeAlarmaActiva(a)) {
 			return false;
-		}
+		} 
 		alarmasActivas.add(a);
 		return true;
+		
 	}
 	
 	/**
