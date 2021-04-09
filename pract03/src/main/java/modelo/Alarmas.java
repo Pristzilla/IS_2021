@@ -1,10 +1,11 @@
 package modelo;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.PriorityQueue;
 
-public class Alarmas {
+public class Alarmas implements IModelo {
 	
 	private AlarmasState state;
 	private final static int INTERVALO_SONANDO = 5000; // milisegundos
@@ -17,34 +18,19 @@ public class Alarmas {
 	public Alarmas() {
 		state = AlarmasState.init(this);
 	}
-	
-	/**
-	 * No ponemos el atributo publico por seguridad, para que no se pueda modificar.
-	 * @return el intervalo que debe estar sonando la alarma en ms
-	 */
+
 	public int getIntervaloSonando() {
 		return INTERVALO_SONANDO;
 	}
 	
-	/**
-	 * Anhade una nueva alarma activa
-	 * @param a
-	 * @return
-	 */
 	public boolean anhadeAlarmaActiva(Alarma a) {
 		if (existeAlarmaActiva(a)) {
 			return false;
-		} 
+		}
 		alarmasActivas.add(a);
 		return true;
-		
 	}
-	
-	/**
-	 * Elimina una alarma, tanto si esta activa como desactivada
-	 * @param a alarma a anhadir
-	 * @return true si se ha anhadido o false si ya existia
-	 */
+
 	public boolean eliminaAlarma(Alarma a) {
 		if (existeAlarmaActiva(a)) {
 			alarmasActivas.remove(a);
@@ -56,18 +42,10 @@ public class Alarmas {
 		return false;
 	}
 	
-	/**
-	 * Indica cual es la alarma con la hora mas proxima.
-	 * @return alarma con la hora mas proxima
-	 */
 	public Alarma alarmaMasProxima() {
 		return alarmasActivas.peek(); 
 	}
 	
-	/**
-	 * Pasa la alarma de activadas a desactivadas.
-	 * @param a alarma a desactivar
-	 */
 	public void desactivaAlarma(Alarma a) {
 		if (existeAlarmaActiva(a)) {
 			alarmasActivas.remove(a);
@@ -75,10 +53,6 @@ public class Alarmas {
 		}
 	}
 	
-	/**
-	 * Pasa la alarma de desactivadas a activadas.
-	 * @param a alarma a activadas
-	 */
 	public void activaAlarma(Alarma a) {
 		if (existeAlarmaDesactivada(a)) {
 			alarmasDesactivadas.remove(a);
@@ -86,64 +60,35 @@ public class Alarmas {
 		}
 	}
 	
-	/**
-	 * Muestra un mensaje indicando que la alarma esta sonando.
-	 */
 	public void activarMelodia() {
 		System.out.println("ALARMA SONANDO");
 	}
-	
-	/**
-	 * Muestra un mensaje indicando que la alarma deja de sonar.
-	 */
+
 	public void desactivarMelodia() {
 		System.out.println("SONIDO APAGADO");
 	}
 
-	/**
-	 * Cambia el estado
-	 * @param value nuevo estado
-	 */
 	public void setState(AlarmasState value) {
 		this.state = value;
 	}
-	
-	/**
-	 * Senhal de apagar la alarma
-	 */
+
 	public void apagar() {
 		state.apagar(this);
 	}
 	
-	/**
-	 * Senhal de desactivar una alarma
-	 * @param id identificador de la alarma a desactivar
-	 */
 	public void alarmaOff(String id) {
 		state.alarmaOff(id, this);
 	}
 	
-	/**
-	 * Senhal de activar una alarma
-	 * @param id identificador de la alarma a activar
-	 */
 	public void alarmaOn(String id) {
 		state.alarmaOn(id, this);
 	}
 	
-	/**
-	 * Elimina una alarma del sistema
-	 * @param id identificador de la alarma
-	 */
+
 	public void borraAlarma(String id) {
 		state.borraAlarma(id, this);
 	}
 	
-	/**
-	 * Anhade una nueva alarma al sistema ya programada para sonar 
-	 * @param id identificador de la alarma
-	 * @param hora hora a la que debe sonar
-	 */
 	public void nuevaAlarma(String id, Date hora) {
 		state.nuevaAlarma(id, hora, this);
 	}
@@ -162,12 +107,22 @@ public class Alarmas {
 	 * @param a alarma a buscar
 	 * @return true si la encuentra o false en caso contrario
 	 */
-	private boolean existeAlarmaActiva(Alarma a) {
+	public boolean existeAlarmaActiva(Alarma a) {
+		Calendar cal1 = Calendar.getInstance(); 
+		Calendar cal2 = Calendar.getInstance();
+		cal1.setTime (a.getHora());
+		cal1.set(Calendar.MILLISECOND, 0);
+		
 		for (Alarma alar: alarmasActivas) {
-			if (alar.getHora().equals(a.getHora())) {
+			cal2.setTime(alar.getHora());
+			cal2.set(Calendar.MILLISECOND, 0);
+			
+			if (cal1.equals(cal2)) {
+				System.out.println ("Ya existe una alarma activada a esa hora.");
 				return true;
 			}
 		}
+		System.out.println("Alarma correctamente añadida.");
 		return false;
 	}
 	
@@ -178,7 +133,8 @@ public class Alarmas {
 	 */
 	private boolean existeAlarmaDesactivada(Alarma a) {
 		for (Alarma alar: alarmasDesactivadas) {
-			if (alar.getHora().equals(a.getHora())) {
+			if (fechaEsIgual(a.getHora(), alar.getHora())) {
+				System.out.println("Son iguales");
 				return true;
 			}
 		}
@@ -204,11 +160,14 @@ public class Alarmas {
 		return null;
 	}
 	
-	/**
-	 * @return el numero de alarmas activas
-	 */
 	public int getAlarmasActivasSize() {
 		return alarmasActivas.size();		
-	}
+	}	
 	
+	private boolean fechaEsIgual(Date fecha1, Date fecha2) {
+		if (fecha1.toString().equals(fecha2.toString())) {
+			return true;
+		}
+		return false;
+	}
 }

@@ -2,27 +2,21 @@ package controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import javax.swing.JOptionPane;
-
 import modelo.Alarma;
 import modelo.Alarmas;
+import modelo.IModelo;
+import vista.IVista;
 import vista.MainWindow;
-import vista.PopUpApagarAlarma;
 
 public class AlarmasControlador {
 	
-	private Alarmas modelo;
-	private MainWindow vista1;
-	private PopUpApagarAlarma vista2;
+	private IModelo modelo;
+	private IVista vista1;
 	
-	public AlarmasControlador(Alarmas m, MainWindow v1, PopUpApagarAlarma v2) {
+	public AlarmasControlador(Alarmas m, MainWindow v1) {
 		modelo = m;
 		vista1 = v1;
-		vista2 = v2;
 		
 		/*Indica que cuando se pulse el boton de anhadir alarma,
 		 * se ejecutara la operacion desde la clase interna NuevaAlarmaListener.*/
@@ -60,22 +54,23 @@ public class AlarmasControlador {
 			String nombreAlarma = vista1.getNombreAlarma();
 			Date fechaAlarma = vista1.getFechaHoraAlarma();
 			
-			//crea la nueva alarma y la aÃ±ade
+			//crea la nueva alarma y la añade
 			Alarma alarma = new Alarma(nombreAlarma, fechaAlarma);
 			
-			/*1.	-Nos hace falta anhadeAlarma? Usando nuevaAlarma() ya se llama a este metodo, desde Programado o Desprogramado creo
-			 *2.	-El sistema no debe permitir aÃ±adir dos alarmas con misma hora.
-			 *	2.1.	-Cuando intentas anhadir dos alarmas con exactamente la misma fecha y hora, el sistema no es capaz de encontrar coincidencia 
-			 usando el metodo "existeAlarmaActiva", dont know why. */
+			//GESTION DE ERRORES..
+			if (alarma.getHora().before(new Date())) {
+				System.out.println ("No se puede añadir una fecha anterior a la actual.");
 			
-			//modelo.anhadeAlarmaActiva(alarma); 
-			vista1.MuestraInformacionAlarmaActiva(alarma);
-			modelo.nuevaAlarma(nombreAlarma, fechaAlarma);
-			vista1.anhadeModelActivas(nombreAlarma);
-			
-			
+			} else { //la alarma puede contar con fecha válida.
 				
+				if (!modelo.existeAlarmaActiva(alarma)) { 
+					//la fecha de la alarma no coincide otra ya creada
+					vista1.MuestraInformacionAlarmaActiva(alarma);
+					modelo.nuevaAlarma(nombreAlarma, fechaAlarma);
+					vista1.anhadeModelActivas(nombreAlarma);
 			
+				}
+			}
 		}
 	}
 	
@@ -100,38 +95,11 @@ public class AlarmasControlador {
 				nombreAlarma = vista1.getAlarmaActivaSelected();
 				vista1.eliminaModelActivas(nombreAlarma);
 			
-			} //el else que falta seria no haber pulsado nada pero no se gestiona
+			} //el else que falta seria no haber seleccionado ninguna alarma, pero no se gestiona
 			
 			Alarma alarma = modelo.buscaAlarmaByID(nombreAlarma);
 			modelo.eliminaAlarma(alarma);
 			modelo.borraAlarma(nombreAlarma); 
-			
-		/*
-		 * NOTA: Con el codigo previo, si en la primera linea la seleccion fue en desactivadas,
-		 * no progresa el codigo. Se estanca porque saltan muchas excepciones y no se elimina de desactivadas.
-		 * Una solucion viable, es crear una estructura try-catch en la que se gestionen las interrupiciones mostrando un mensaje 
-		 * por pantalla y ejecutando las lineas restantes de codigo que faltan. En lugar de esto, es mejor comprobar si acaso la lista
-		 * de activas esta activada, siendo esto la implementacion de arriba.
-		 * 
-			try {
-				
-			
-			String nombreAlarma = vista1.getAlarmaActivaSelected();
-			if (nombreAlarma.equals(null)) { // Si no esta en activas, esta en desactivadas
-				nombreAlarma = vista1.getAlarmaDesactivadaSelected();
-				vista1.eliminaModelDesactivadas(nombreAlarma);
-			} else {
-				vista1.eliminaModelActivas(nombreAlarma);
-			}
-			Alarma alarma = modelo.buscaAlarmaByID(nombreAlarma);
-			modelo.eliminaAlarma(alarma);
-			modelo.borraAlarma(nombreAlarma); // TODO esta bien?
-			
-			}catch (Exception e) {
-				System.out.println("No se ha podido eliminar la alarma porque has seleccionado en desactivadas."); 
-				//eliminar alarma en desactivadas
-			}
-			*/
 		}
 	}
 	
@@ -146,9 +114,6 @@ public class AlarmasControlador {
 			String nombreAlarma = vista1.getAlarmaDesactivadaSelected();
 			vista1.anhadeModelActivas(nombreAlarma);
 			vista1.eliminaModelDesactivadas(nombreAlarma);
-			/*if (nombreAlarma.equals(null)) { // Si no esta en activas, esta en desactivadas
-				nombreAlarma = vista1.getAlarmaDesactivadaSelected();
-			}CREO QUE SOBRA*/
 			modelo.alarmaOn(nombreAlarma);
 		}
 	}
@@ -164,9 +129,6 @@ public class AlarmasControlador {
 			String nombreAlarma = vista1.getAlarmaActivaSelected();
 			vista1.anhadeModelDesactivadas(nombreAlarma);
 			vista1.eliminaModelActivas(nombreAlarma);
-			/*if (nombreAlarma.equals(null)) { // Si no esta en activas, esta en desactivadas
-				nombreAlarma = vista1.getAlarmaDesactivadaSelected();
-			}CREO QUE SOBRA*/
 			modelo.alarmaOff(nombreAlarma);
 		}
 	}
@@ -178,8 +140,7 @@ public class AlarmasControlador {
 	public class ApagaAlarmaListener implements ActionListener {
 		
 		public void actionPerformed(ActionEvent arg0) {
-			//vista2.dispose(); // No hacemos pop up 
-			modelo.apagar(); // TODO bien hecho?
+			modelo.apagar();
 		}
 	}
 }

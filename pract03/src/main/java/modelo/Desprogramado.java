@@ -29,7 +29,7 @@ public class Desprogramado extends AlarmasState {
 		this.exitAction(context);
 		context.setState(estadoProgramado);
 		// Acciones asociadas a la transicion
-		context.anhadeAlarmaActiva(new Alarma(id, hora));
+		if (context.anhadeAlarmaActiva(new Alarma(id, hora)));
 		estadoProgramado.entryAction(context);
 		estadoProgramado.doAction(context);			
 	}
