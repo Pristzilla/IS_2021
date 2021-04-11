@@ -115,7 +115,6 @@ public class Alarmas implements IModelo {
 			cal2.set(Calendar.MILLISECOND, 0);
 		
 			if (cal1.equals(cal2)) {
-				//System.out.println ("Ya existe una alarma activada a esa hora.");
 				return true;
 			}
 		}
@@ -127,9 +126,18 @@ public class Alarmas implements IModelo {
 	 * @param a alarma a buscar
 	 * @return true si la encuentra o false en caso contrario
 	 */
-	private boolean existeAlarmaDesactivada(Alarma a) {
+	public boolean existeAlarmaDesactivada(Alarma a) {
+		// El metodo "equals" con "Dates" compara hasta los milisegundos
+		Calendar cal1 = Calendar.getInstance(); 
+		Calendar cal2 = Calendar.getInstance();
+		cal1.setTime (a.getHora());
+		cal1.set(Calendar.MILLISECOND, 0);
+		
 		for (Alarma alar: alarmasDesactivadas) {
-			if (fechaEsIgual(a.getHora(), alar.getHora())) {
+			cal2.setTime(alar.getHora());
+			cal2.set(Calendar.MILLISECOND, 0);
+		
+			if (cal1.equals(cal2)) {
 				return true;
 			}
 		}
@@ -153,11 +161,4 @@ public class Alarmas implements IModelo {
 	public int getAlarmasActivasSize() {
 		return alarmasActivas.size();		
 	}	
-	
-	private boolean fechaEsIgual(Date fecha1, Date fecha2) {
-		if (fecha1.toString().equals(fecha2.toString())) {
-			return true;
-		}
-		return false;
-	}
 }

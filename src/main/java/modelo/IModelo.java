@@ -106,4 +106,11 @@ public interface IModelo {
 	 * @return true si la encuentra o false en caso contrario
 	 */
 	public boolean existeAlarmaActiva(Alarma a);
+	
+	/**
+	 * Comprueba si una alarma existe y esta desactivada
+	 * @param a alarma a buscar
+	 * @return true si la encuentra o false en caso contrario
+	 */
+	public boolean existeAlarmaDesactivada(Alarma a);
 }

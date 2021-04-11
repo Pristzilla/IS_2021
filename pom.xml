@@ -3,7 +3,12 @@
   <groupId>es.unican.is2</groupId>
   <artifactId>pract03</artifactId>
   <version>0.0.1</version>
-  
+  <packaging>jar</packaging>
+	<properties>
+ 	 	<maven.compiler.source>7</maven.compiler.source>
+		<maven.compiler.target>7</maven.compiler.target>
+	</properties>  
+
   <build>
 		<plugins>
 			<plugin>
@@ -13,7 +18,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>es.unican.is2.pract03.vista.AlarmasMVCMain</mainClass>
+							<mainClass>vista.AlarmasMVCMain</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
@@ -38,11 +43,6 @@
 			</plugin>
 		</plugins>
 	</build>
-	
-	<properties>
- 	 	<maven.compiler.source>7</maven.compiler.source>
-		<maven.compiler.target>7</maven.compiler.target>
-	</properties>
-  
+	 
   
 </project>

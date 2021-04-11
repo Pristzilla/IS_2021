@@ -2,6 +2,7 @@ package controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Calendar;
 import java.util.Date;
 import modelo.Alarma;
 import modelo.Alarmas;
@@ -59,9 +60,9 @@ public class AlarmasControlador {
 			if (alarma.getHora().before(new Date())) {
 				System.out.println ("No se puede añadir una fecha anterior a la actual.");
 			
-			} else { //la alarma puede contar con fecha válida.
+			} else { //la alarma puede tener una fecha válida.
 				
-				if (!modelo.existeAlarmaActiva(alarma)) { 
+				if (!modelo.existeAlarmaActiva(alarma) && !modelo.existeAlarmaDesactivada(alarma)) { 
 					//la fecha de la alarma no coincide otra ya creada
 					vista.MuestraInformacionAlarmaActiva(alarma);
 					modelo.nuevaAlarma(nombreAlarma, fechaAlarma);
@@ -111,6 +112,24 @@ public class AlarmasControlador {
 			String nombreAlarma = vista.getAlarmaDesactivadaSelected();
 			vista.anhadeModelActivas(nombreAlarma);
 			vista.eliminaModelDesactivadas(nombreAlarma);
+			
+			/**
+			 * 1. Recoger la hora de la alarma
+			 * 2. Revisar si la hora a la que estaba programada ya ha pasado
+			 * 3. En ese caso, programarla para el día siguiente
+			 */
+			Alarma alarma = modelo.buscaAlarmaByID(nombreAlarma);
+			Date fechaAlarma = alarma.getHora();
+			Date fechaActual = new Date();
+			if (fechaAlarma.before(fechaActual)) {
+				Calendar nuevaFecha = Calendar.getInstance();
+				nuevaFecha.setTime(fechaAlarma); 
+				nuevaFecha.add(Calendar.DATE, 1);
+				fechaAlarma = nuevaFecha.getTime();
+				alarma.setHora(fechaAlarma);
+				vista.MuestraInformacionAlarmaActiva(alarma);
+			}
+			
 			modelo.alarmaOn(nombreAlarma);
 		}
 	}
