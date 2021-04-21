@@ -19,23 +19,28 @@ public class Seguro {
 	@SuppressWarnings("serial")
 	public static class DatoIncorrectoException extends RuntimeException {};
 	
-	public Seguro (int potencia, Cliente cliente, Cobertura cobertura) {
+	public Seguro (int potencia, Cliente cliente, Cobertura cobertura) throws DatoIncorrectoException {
+		if (potencia < 0) {
+			throw new DatoIncorrectoException();			
+		}
+		if (cliente == null) {
+			throw new NullPointerException();
+		}
 		this.potenciaCV = potencia;
 		this.tomadorSeguro = cliente;
 		this.cobertura = cobertura;
 	}
 	
-	public double precio() throws DatoIncorrectoException {
+	public double precio()  {
 		
 		double precioBase = 0.0;
 		double porcentajePotencia = 0.0;
 		
-		if (potenciaCV < 0 || fechaUltimoSiniestro.isAfter(LocalDate.now())) { // TODO fechaIncorrecta
-			throw new DatoIncorrectoException();
-		}
+		
 		// Cobertura
 		if (cobertura.equals(Cobertura.TODORIESGO)) {
 			precioBase = PRECIOTODORIESGO;
+			//System.out.print("El precio base es: "+precioBase);
 		} else if (cobertura.equals(Cobertura.TERCEROSLUNAS)) {
 			precioBase = PRECIOTERCEROSLUNAS;
 		} else {
@@ -46,19 +51,23 @@ public class Seguro {
 			porcentajePotencia = 0.05;
 		} else if (potenciaCV > 110) {
 			porcentajePotencia = 0.2;
-		} 
+		}
+		double precio = precioBase + precioBase*porcentajePotencia;
 		// Fecha ultimo siniestro
-		if (fechaUltimoSiniestro.isAfter(LocalDate.now().minusYears(1)) && fechaUltimoSiniestro.isBefore(LocalDate.now())) {
-			precioBase += 200;
-		} else if (fechaUltimoSiniestro.isAfter(LocalDate.now().minusYears(3)) && 
+		if (fechaUltimoSiniestro.isAfter(LocalDate.now().minusYears(1).minusDays(1)) && 
+				fechaUltimoSiniestro.isBefore(LocalDate.now().plusDays(1))) {
+			precio += 200;
+			//System.out.print("El precio base es: "+precioBase);
+		} else if (fechaUltimoSiniestro.isAfter(LocalDate.now().minusYears(3).minusDays(1)) && 
 				fechaUltimoSiniestro.isBefore(LocalDate.now().minusYears(1))) {
-			precioBase += 50;
+			precio += 50;
 		}
 		// Minusvalia
-		double precio = precioBase + precioBase*porcentajePotencia;
 		if (tomadorSeguro.getMinusvalia()) {
+			//System.out.print("El descuento minusvalido es: "+precio);
 			return precio - precio*0.25;
 		}
+		//System.out.print("El precio esperado eran 937,5 y es: "+precio);
 		return precio;
 	}
 	
@@ -74,12 +83,12 @@ public class Seguro {
 		return cobertura;
 	}
 	
-	public void setFechaUltimoSiniestro(LocalDate fecha) {
+	public void setFechaUltimoSiniestro(LocalDate fecha) throws DatoIncorrectoException {
+		if ( fecha.isAfter(LocalDate.now())) { // TODO fechaIncorrecta
+			throw new DatoIncorrectoException();
+		}
 		this.fechaUltimoSiniestro = fecha;
 	}
-	
-	public LocalDate getFechaUltimoSiniestro() {
-		return fechaUltimoSiniestro;
-	}
+
 
 }
