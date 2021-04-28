@@ -25,10 +25,54 @@ public class SeguroTest {
 	
 	@Test
 	public void testConstructor() { // TODO bien?
-		sutSeg = new Seguro(90, clienteMinus, Seguro.Cobertura.TODORIESGO);
-		assertTrue(sutSeg.getPotencia()==90);
-		assertTrue(sutSeg.getCliente().equals(clienteMinus));
-		assertTrue(sutSeg.getCobertura()==Seguro.Cobertura.TODORIESGO);		
+		// Casos de prueba validos
+		try {
+			sutSeg = new Seguro(90, clienteMinus, Seguro.Cobertura.TODORIESGO);
+			assertTrue(sutSeg.getPotencia()==90);
+			assertTrue(sutSeg.getCliente().equals(clienteMinus));
+			assertTrue(sutSeg.getCobertura()==Seguro.Cobertura.TODORIESGO);	
+		} catch (DatoIncorrectoException e) {
+			fail();
+		}
+
+		try {
+			sutSeg = new Seguro(100, clienteMinus, Seguro.Cobertura.TERCEROSLUNAS);
+			assertTrue(sutSeg.getPotencia()==100);
+			assertTrue(sutSeg.getCliente().equals(clienteMinus));
+			assertTrue(sutSeg.getCobertura()==Seguro.Cobertura.TERCEROSLUNAS);	
+		} catch (DatoIncorrectoException e) {
+			fail();
+		}
+		
+		try {
+			sutSeg = new Seguro(110, clienteMinus, Seguro.Cobertura.TERCEROS);
+			assertTrue(sutSeg.getPotencia()==110);
+			assertTrue(sutSeg.getCliente().equals(clienteMinus));
+			assertTrue(sutSeg.getCobertura()==Seguro.Cobertura.TERCEROS);	
+		} catch (DatoIncorrectoException e) {
+			fail();
+		}
+		
+		try {
+			sutSeg = new Seguro(200, clienteMinus, Seguro.Cobertura.TODORIESGO);
+			assertTrue(sutSeg.getPotencia()==200);
+			assertTrue(sutSeg.getCliente().equals(clienteMinus));
+			assertTrue(sutSeg.getCobertura()==Seguro.Cobertura.TODORIESGO);	
+		} catch (DatoIncorrectoException e) {
+			fail();
+		}
+		
+		// Casos de prueba no validos
+		try {
+			sutSeg = new Seguro(-1, clienteMinus, Seguro.Cobertura.TODORIESGO);
+			fail();
+		} catch (DatoIncorrectoException e) {}
+		
+		try {
+			Cliente c = null;
+			sutSeg = new Seguro(90, c, Seguro.Cobertura.TERCEROSLUNAS);
+			fail();
+		} catch (NullPointerException e) {}
 	}
 	
 	@Test
@@ -39,6 +83,7 @@ public class SeguroTest {
 			sutSeg = new Seguro(90, clienteMinus, Seguro.Cobertura.TODORIESGO);
 			LocalDate fecha = LocalDate.now();
 			sutSeg.setFechaUltimoSiniestro(fecha.minusYears(1));
+			System.out.print("El precio esperado eran 937,5 y es: "+sutSeg.precio());
 			assertTrue(sutSeg.precio()==937.5);
 		} catch (DatoIncorrectoException e) {
 			fail();
@@ -57,6 +102,7 @@ public class SeguroTest {
 			sutSeg = new Seguro(110, clienteMinus, Seguro.Cobertura.TERCEROS);
 			LocalDate fecha = LocalDate.now();
 			sutSeg.setFechaUltimoSiniestro(fecha);
+			System.out.print("El precio esperado eran 465 y es: "+sutSeg.precio());
 			assertTrue(sutSeg.precio()==465);
 		} catch (DatoIncorrectoException e) {
 			fail();
@@ -94,20 +140,13 @@ public class SeguroTest {
 		 * debido al enumerado, por eso ya no lo probamos.
 		 * El caso de prueba no valido con potencia "AAA" no se puede implementar
 		 * porque Java controla que el campo sea un entero.
+		 * El caso de prueba no valido con fecha invalida (2/13/2021) ya lo gestiona la
+		 * clase LocalDate.
 		*/
 		try {
-			sutSeg = new Seguro(0, clienteNoMinus, Seguro.Cobertura.TODORIESGO);
+			sutSeg = new Seguro(-1, clienteNoMinus, Seguro.Cobertura.TODORIESGO);
 			LocalDate fecha = LocalDate.now();
 			sutSeg.setFechaUltimoSiniestro(fecha.minusYears(1));
-			sutSeg.precio();
-			fail();
-		} catch (DatoIncorrectoException e) {}
-		
-		try {
-			sutSeg = new Seguro(200, clienteNoMinus, Seguro.Cobertura.TERCEROS);
-			LocalDate fecha = LocalDate.of(2021, 13, 2);
-			System.out.printf(fecha.toString());
-			sutSeg.setFechaUltimoSiniestro(fecha);
 			sutSeg.precio();
 			fail();
 		} catch (DatoIncorrectoException e) {}

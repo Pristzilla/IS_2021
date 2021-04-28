@@ -15,11 +15,17 @@ public class Seguro {
 	private final static int PRECIOTERCEROSLUNAS = 600;
 	private final static int PRECIOTERCEROS = 400;
 	
-	// Excepcion
+	// Excepciones
 	@SuppressWarnings("serial")
 	public static class DatoIncorrectoException extends RuntimeException {};
 	
-	public Seguro (int potencia, Cliente cliente, Cobertura cobertura) {
+	public Seguro (int potencia, Cliente cliente, Cobertura cobertura) throws DatoIncorrectoException {
+		if (potencia < 0) { // No puede haber potencias negativas
+			throw new DatoIncorrectoException();			
+		}
+		if (cliente.equals(null)) { // El cliente no puede ser nulo
+			throw new NullPointerException();
+		}
 		this.potenciaCV = potencia;
 		this.tomadorSeguro = cliente;
 		this.cobertura = cobertura;
@@ -30,32 +36,41 @@ public class Seguro {
 		double precioBase = 0.0;
 		double porcentajePotencia = 0.0;
 		
-		if (potenciaCV < 0 || fechaUltimoSiniestro.isAfter(LocalDate.now())) { // TODO fechaIncorrecta
+		if (potenciaCV < 0 || fechaUltimoSiniestro.isAfter(LocalDate.now())) {
 			throw new DatoIncorrectoException();
 		}
+		
 		// Cobertura
-		if (cobertura.equals(Cobertura.TODORIESGO)) {
-			precioBase = PRECIOTODORIESGO;
-		} else if (cobertura.equals(Cobertura.TERCEROSLUNAS)) {
-			precioBase = PRECIOTERCEROSLUNAS;
-		} else {
-			precioBase = PRECIOTERCEROS;
+		switch (this.cobertura) {
+			case TODORIESGO:
+				precioBase = PRECIOTODORIESGO;
+				break;
+			case TERCEROSLUNAS:
+				precioBase = PRECIOTERCEROSLUNAS;
+				break;
+			case TERCEROS:
+				precioBase = PRECIOTERCEROS;
+				break;
 		}
+
 		// Potencia
 		if (potenciaCV >= 90 && potenciaCV <= 110) {
 			porcentajePotencia = 0.05;
 		} else if (potenciaCV > 110) {
 			porcentajePotencia = 0.2;
-		} 
-		// Fecha ultimo siniestro
-		if (fechaUltimoSiniestro.isAfter(LocalDate.now().minusYears(1)) && fechaUltimoSiniestro.isBefore(LocalDate.now())) {
-			precioBase += 200;
-		} else if (fechaUltimoSiniestro.isAfter(LocalDate.now().minusYears(3)) && 
-				fechaUltimoSiniestro.isBefore(LocalDate.now().minusYears(1))) {
-			precioBase += 50;
 		}
-		// Minusvalia
 		double precio = precioBase + precioBase*porcentajePotencia;
+		
+		// Fecha ultimo siniestro
+		if (fechaUltimoSiniestro.isAfter(LocalDate.now().minusYears(1).minusDays(1)) && 
+				fechaUltimoSiniestro.isBefore(LocalDate.now().plusDays(1))) {
+			precio += 200;
+		} else if (fechaUltimoSiniestro.isAfter(LocalDate.now().minusYears(3).minusDays(1)) && 
+				fechaUltimoSiniestro.isBefore(LocalDate.now().minusYears(1))) {
+			precio += 50;
+		}
+		
+		// Minusvalia
 		if (tomadorSeguro.getMinusvalia()) {
 			return precio - precio*0.25;
 		}
@@ -74,12 +89,14 @@ public class Seguro {
 		return cobertura;
 	}
 	
-	public void setFechaUltimoSiniestro(LocalDate fecha) {
+	public void setFechaUltimoSiniestro(LocalDate fecha) throws DatoIncorrectoException {
+		if (fecha.isAfter(LocalDate.now())) { // La fecha no puede ser a aprtir de hoy
+			throw new DatoIncorrectoException();
+		}
 		this.fechaUltimoSiniestro = fecha;
 	}
 	
 	public LocalDate getFechaUltimoSiniestro() {
 		return fechaUltimoSiniestro;
 	}
-
 }
