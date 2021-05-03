@@ -13,7 +13,7 @@ import es.unican.is2.Seguro.DatoIncorrectoException;
 
 public class SeguroTest {
 	
-	private Seguro sutSeg;
+	private Seguro sut;
 	private Cliente clienteMinus;
 	private Cliente clienteNoMinus;
 	
@@ -24,53 +24,53 @@ public class SeguroTest {
 	}
 	
 	@Test
-	public void testConstructor() { // TODO bien?
+	public void testConstructor() {
 		// Casos de prueba validos
 		try {
-			sutSeg = new Seguro(90, clienteMinus, Seguro.Cobertura.TODORIESGO);
-			assertTrue(sutSeg.getPotencia()==90);
-			assertTrue(sutSeg.getCliente().equals(clienteMinus));
-			assertTrue(sutSeg.getCobertura()==Seguro.Cobertura.TODORIESGO);	
+			sut = new Seguro(90, clienteMinus, Seguro.Cobertura.TODORIESGO);
+			assertTrue(sut.getPotencia()==90);
+			assertTrue(sut.getCliente().equals(clienteMinus));
+			assertTrue(sut.getCobertura()==Seguro.Cobertura.TODORIESGO);	
 		} catch (DatoIncorrectoException e) {
 			fail();
 		}
 
 		try {
-			sutSeg = new Seguro(100, clienteMinus, Seguro.Cobertura.TERCEROSLUNAS);
-			assertTrue(sutSeg.getPotencia()==100);
-			assertTrue(sutSeg.getCliente().equals(clienteMinus));
-			assertTrue(sutSeg.getCobertura()==Seguro.Cobertura.TERCEROSLUNAS);	
+			sut = new Seguro(100, clienteMinus, Seguro.Cobertura.TERCEROSLUNAS);
+			assertTrue(sut.getPotencia()==100);
+			assertTrue(sut.getCliente().equals(clienteMinus));
+			assertTrue(sut.getCobertura()==Seguro.Cobertura.TERCEROSLUNAS);	
 		} catch (DatoIncorrectoException e) {
 			fail();
 		}
 		
 		try {
-			sutSeg = new Seguro(110, clienteMinus, Seguro.Cobertura.TERCEROS);
-			assertTrue(sutSeg.getPotencia()==110);
-			assertTrue(sutSeg.getCliente().equals(clienteMinus));
-			assertTrue(sutSeg.getCobertura()==Seguro.Cobertura.TERCEROS);	
+			sut = new Seguro(110, clienteMinus, Seguro.Cobertura.TERCEROS);
+			assertTrue(sut.getPotencia()==110);
+			assertTrue(sut.getCliente().equals(clienteMinus));
+			assertTrue(sut.getCobertura()==Seguro.Cobertura.TERCEROS);	
 		} catch (DatoIncorrectoException e) {
 			fail();
 		}
 		
 		try {
-			sutSeg = new Seguro(200, clienteMinus, Seguro.Cobertura.TODORIESGO);
-			assertTrue(sutSeg.getPotencia()==200);
-			assertTrue(sutSeg.getCliente().equals(clienteMinus));
-			assertTrue(sutSeg.getCobertura()==Seguro.Cobertura.TODORIESGO);	
+			sut = new Seguro(200, clienteMinus, Seguro.Cobertura.TODORIESGO);
+			assertTrue(sut.getPotencia()==200);
+			assertTrue(sut.getCliente().equals(clienteMinus));
+			assertTrue(sut.getCobertura()==Seguro.Cobertura.TODORIESGO);	
 		} catch (DatoIncorrectoException e) {
 			fail();
 		}
 		
 		// Casos de prueba no validos
 		try {
-			sutSeg = new Seguro(-1, clienteMinus, Seguro.Cobertura.TODORIESGO);
+			sut = new Seguro(-1, clienteMinus, Seguro.Cobertura.TODORIESGO);
 			fail();
 		} catch (DatoIncorrectoException e) {}
 		
 		try {
 			Cliente c = null;
-			sutSeg = new Seguro(90, c, Seguro.Cobertura.TERCEROSLUNAS);
+			sut = new Seguro(90, c, Seguro.Cobertura.TERCEROSLUNAS);
 			fail();
 		} catch (NullPointerException e) {}
 	}
@@ -80,57 +80,57 @@ public class SeguroTest {
 		
 		// Casos de prueba validos
 		try {
-			sutSeg = new Seguro(90, clienteMinus, Seguro.Cobertura.TODORIESGO);
+			sut = new Seguro(90, clienteMinus, Seguro.Cobertura.TODORIESGO);
 			LocalDate fecha = LocalDate.now();
-			sutSeg.setFechaUltimoSiniestro(fecha.minusYears(1));
-			System.out.print("El precio esperado eran 937,5 y es: "+sutSeg.precio());
-			assertTrue(sutSeg.precio()==937.5);
+			sut.setFechaUltimoSiniestro(fecha.minusYears(1));
+			System.out.print("El precio esperado eran 937,5 y es: "+sut.precio());
+			assertTrue(sut.precio()==937.5);
 		} catch (DatoIncorrectoException e) {
 			fail();
 		}
 		
 		try {
-			sutSeg = new Seguro(100, clienteNoMinus, Seguro.Cobertura.TERCEROSLUNAS);
+			sut = new Seguro(100, clienteNoMinus, Seguro.Cobertura.TERCEROSLUNAS);
 			LocalDate fecha = LocalDate.now();
-			sutSeg.setFechaUltimoSiniestro(fecha.minusMonths(6));
-			assertTrue(sutSeg.precio()==830);
+			sut.setFechaUltimoSiniestro(fecha.minusMonths(6));
+			assertTrue(sut.precio()==830);
 		} catch (DatoIncorrectoException e) {
 			fail();
 		}
 		
 		try {
-			sutSeg = new Seguro(110, clienteMinus, Seguro.Cobertura.TERCEROS);
+			sut = new Seguro(110, clienteMinus, Seguro.Cobertura.TERCEROS);
 			LocalDate fecha = LocalDate.now();
-			sutSeg.setFechaUltimoSiniestro(fecha);
-			System.out.print("El precio esperado eran 465 y es: "+sutSeg.precio());
-			assertTrue(sutSeg.precio()==465);
+			sut.setFechaUltimoSiniestro(fecha);
+			System.out.print("El precio esperado eran 465 y es: "+sut.precio());
+			assertTrue(sut.precio()==465);
 		} catch (DatoIncorrectoException e) {
 			fail();
 		}
 		
 		try {
-			sutSeg = new Seguro(200, clienteNoMinus, Seguro.Cobertura.TODORIESGO);
+			sut = new Seguro(200, clienteNoMinus, Seguro.Cobertura.TODORIESGO);
 			LocalDate fecha = LocalDate.now();
-			sutSeg.setFechaUltimoSiniestro(fecha.minusYears(3));
-			assertTrue(sutSeg.precio()==1250);
+			sut.setFechaUltimoSiniestro(fecha.minusYears(3));
+			assertTrue(sut.precio()==1250);
 		} catch (DatoIncorrectoException e) {
 			fail();
 		}
 		
 		try {
-			sutSeg = new Seguro(200, clienteNoMinus, Seguro.Cobertura.TERCEROSLUNAS);
+			sut = new Seguro(200, clienteNoMinus, Seguro.Cobertura.TERCEROSLUNAS);
 			LocalDate fecha = LocalDate.now();
-			sutSeg.setFechaUltimoSiniestro(fecha.minusYears(2));
-			assertTrue(sutSeg.precio()==770);
+			sut.setFechaUltimoSiniestro(fecha.minusYears(2));
+			assertTrue(sut.precio()==770);
 		} catch (DatoIncorrectoException e) {
 			fail();
 		}
 		
 		try {
-			sutSeg = new Seguro(90, clienteNoMinus, Seguro.Cobertura.TERCEROS);
+			sut = new Seguro(90, clienteNoMinus, Seguro.Cobertura.TERCEROS);
 			LocalDate fecha = LocalDate.now();
-			sutSeg.setFechaUltimoSiniestro(fecha.minusYears(5));
-			assertTrue(sutSeg.precio()==420);
+			sut.setFechaUltimoSiniestro(fecha.minusYears(5));
+			assertTrue(sut.precio()==420);
 		} catch (DatoIncorrectoException e) {
 			fail();
 		}
@@ -144,18 +144,18 @@ public class SeguroTest {
 		 * clase LocalDate.
 		*/
 		try {
-			sutSeg = new Seguro(-1, clienteNoMinus, Seguro.Cobertura.TODORIESGO);
+			sut = new Seguro(-1, clienteNoMinus, Seguro.Cobertura.TODORIESGO);
 			LocalDate fecha = LocalDate.now();
-			sutSeg.setFechaUltimoSiniestro(fecha.minusYears(1));
-			sutSeg.precio();
+			sut.setFechaUltimoSiniestro(fecha.minusYears(1));
+			sut.precio();
 			fail();
 		} catch (DatoIncorrectoException e) {}
 		
 		try {
-			sutSeg = new Seguro(110, clienteNoMinus, Seguro.Cobertura.TODORIESGO);
+			sut = new Seguro(110, clienteNoMinus, Seguro.Cobertura.TODORIESGO);
 			LocalDate fecha = LocalDate.now();
-			sutSeg.setFechaUltimoSiniestro(fecha.plusDays(1));
-			sutSeg.precio();
+			sut.setFechaUltimoSiniestro(fecha.plusDays(1));
+			sut.precio();
 			fail();
 		} catch (DatoIncorrectoException e) {}
 	}
